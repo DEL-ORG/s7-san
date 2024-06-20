@@ -1,80 +1,82 @@
-pipeline {
+pipeline{
     agent any
+    stages{
+        stage('Hallo Welt') {
+            steps {
+                echo 'Hier ist DevOps ganz verfügbar'
+                sh '''
+                ls
+                pwd
+                env
+                ls -1
+                '''
+            }
+        }
 
-    stages {
-        stage('hello1') {
+        stage('DevOps Umgebung') {
             steps {
+                echo 'was Devops die Welt bringt'
                 sh '''
-                sleep 5
-                ls
-                pwd
+                touch köln01
+                mkdir aktionen01
                 '''
             }
+
         }
-        stage('hello2') {
+
+        stage('build') {
             steps {
+                echo 'was Devops die Welt bringt'
                 sh '''
-                sleep 5
-                ls
-                pwd
+                touch köln02
+                mkdir aktionen02
                 '''
             }
+
         }
-        stage('hello3') {
+
+        stage('scan') {
             steps {
+                echo 'was Devops die Welt bringt'
                 sh '''
-                sleep 5
-                ls
-                pwd
+                touch köln03
+                mkdir aktionen03
                 '''
             }
+
         }
-        stage('hello4') {
+
+        stage('test') {
             steps {
+                echo 'was Devops die Welt bringt'
                 sh '''
-                sleep 5
-                ls
-                pwd
+                touch köln04
+                mkdir aktionen04
                 '''
             }
+
         }
-        stage('hello5') {
+
+        stage('sicherheit') {
             steps {
+                echo 'was Devops die Welt bringt'
                 sh '''
-                sleep 5
-                ls
-                pwd
+                touch köln05
+                mkdir aktionen05
                 '''
             }
+
         }
-        stage('hello6') {
+
+        stage('deployment') {
             steps {
+                echo 'was Devops die Welt bringt'
                 sh '''
-                sleep 5
-                ls
-                pwd
+                touch köln06
+                mkdir aktionen06
                 '''
             }
-        }
-        stage('hello7') {
-            steps {
-                sh '''
-                sleep 5
-                ls
-                pwd
-                '''
-            }
+
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
