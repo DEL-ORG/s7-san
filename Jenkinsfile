@@ -17,8 +17,8 @@ pipeline{
             steps {
                 echo 'was Devops die Welt bringt'
                 sh '''
-                touch köln01
-                mkdir aktionen01
+                touch ganz
+                mkdir alles
                 '''
             }
 
@@ -52,6 +52,7 @@ pipeline{
                 echo 'was Devops die Welt bringt'
                 sh '''
                 sleep 5
+                pwd
                 '''
             }
 
