@@ -28,6 +28,9 @@ pipeline{
             steps {
                 echo 'was Devops die Welt bringt'
                 sh '''
+                which
+                uname
+                wc
                 touch köln02
                 mkdir aktionen02
                 '''
