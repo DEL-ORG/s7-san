@@ -29,7 +29,6 @@ pipeline{
                 echo 'was Devops die Welt bringt'
                 sh '''
                 which
-                uname
                 wc
                sleep 5
                 '''
