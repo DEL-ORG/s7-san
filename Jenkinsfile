@@ -9,6 +9,7 @@ pipeline{
                 pwd
                 env
                 ls -1
+                sleep 5
                 '''
             }
         }
