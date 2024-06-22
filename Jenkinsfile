@@ -19,6 +19,7 @@ pipeline{
                 sh '''
                 touch ganz
                 mkdir alles
+                sleep 5
                 '''
             }
 
