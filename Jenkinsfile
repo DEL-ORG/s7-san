@@ -28,8 +28,6 @@ pipeline{
             steps {
                 echo 'was Devops die Welt bringt'
                 sh '''
-                which
-                wc
                sleep 5
                 '''
             }
