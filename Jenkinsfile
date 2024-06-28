@@ -9,7 +9,7 @@ pipeline{
                 pwd
                 env
                 ls -1
-                sleep 2
+                sleep 3
                 '''
             }
         }
@@ -20,7 +20,7 @@ pipeline{
                 sh '''
                 touch ganz
                 mkdir alles
-                sleep 5
+                sleep 3
                 '''
             }
 
