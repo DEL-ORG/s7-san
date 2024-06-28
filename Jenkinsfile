@@ -5,7 +5,7 @@ pipeline{
             steps {
                 echo 'Hier ist DevOps ganz verfügbar'
                 sh '''
-                ls -lh
+                ls -a
                 pwd
                 env
                 ls -1
