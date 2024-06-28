@@ -18,8 +18,6 @@ pipeline{
             steps {
                 echo 'was Devops die Welt bringt'
                 sh '''
-                touch ganz
-                mkdir alles
                 sleep 3
                 '''
             }
