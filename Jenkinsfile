@@ -38,7 +38,7 @@ pipeline{
             steps {
                 echo 'was Devops die Welt bringt'
                 sh '''
-                sleep 5
+                sleep 3
                 '''
             }
 
@@ -48,7 +48,7 @@ pipeline{
             steps {
                 echo 'was Devops die Welt bringt'
                 sh '''
-                sleep 5
+                sleep 3
                 pwd
                 '''
             }
@@ -59,7 +59,7 @@ pipeline{
             steps {
                 echo 'was Devops die Welt bringt'
                 sh '''
-               sleep 5
+               sleep 3
                 '''
             }
 
@@ -69,7 +69,7 @@ pipeline{
             steps {
                 echo 'was Devops die Welt bringt'
                 sh '''
-               sleep 5
+               sleep 3
                 '''
             }
 
