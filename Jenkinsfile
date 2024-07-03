@@ -9,7 +9,7 @@ pipeline{
                 pwd
                 env
                 ls -1
-                sleep 3
+                sleep 10
                 '''
             }
         }
@@ -38,7 +38,10 @@ pipeline{
             steps {
                 echo 'was Devops die Welt bringt'
                 sh '''
+                cat /etc/os-release
+
                 sleep 3
+                
                 '''
             }
 
@@ -48,8 +51,9 @@ pipeline{
             steps {
                 echo 'was Devops die Welt bringt'
                 sh '''
-                sleep 3
                 pwd
+                uname -a
+                 sleep 10
                 '''
             }
 
@@ -59,6 +63,7 @@ pipeline{
             steps {
                 echo 'was Devops die Welt bringt'
                 sh '''
+                lscpu
                sleep 3
                 '''
             }
