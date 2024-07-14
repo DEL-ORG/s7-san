@@ -53,7 +53,7 @@ pipeline{
                 sh '''
                 pwd
                 uname -a
-                 sleep 10
+                 sleep 5
                 '''
             }
 
@@ -63,8 +63,8 @@ pipeline{
             steps {
                 echo 'was Devops die Welt bringt'
                 sh '''
-                lscpu
-               sleep 3
+                ls -la
+               sleep 2
                 '''
             }
 
