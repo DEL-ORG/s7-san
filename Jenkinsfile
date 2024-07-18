@@ -1,85 +1,126 @@
-pipeline{
+pipeline {
     agent any
-    stages{
-        stage('Hallo Welt') {
+
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials-id') // Replace with your DockerHub credentials ID
+        GITHUB_REPO = 'https://github.com/yourusername/your-repo.git' // Replace with your GitHub repo
+        APP_WORKDIR = '/app'
+        DOCKER_IMAGE = 'yourusername/python-web-app' // Replace with your DockerHub repository name
+        KUBE_CONFIG = credentials('kubeconfig-credentials-id') // Replace with your Kubernetes config credentials ID
+    }
+
+    stages {
+        stage('Setup GitHub Repository') {
             steps {
-                echo 'Hier ist DevOps ganz verfügbar'
+                git branch: 'main', url: "${env.GITHUB_REPO}"
+            }
+        }
+
+        stage('Download Application Code') {
+            steps {
                 sh '''
-                ls -a
-                pwd
-                env
-                ls -1
-                sleep 5
+                curl -O https://group5-braincells.s3.amazonaws.com/python-web-app.zip
+                unzip python-web-app.zip -d ${APP_WORKDIR}
                 '''
             }
         }
 
-        stage('DevOps Umgebung') {
+        stage('Create Dockerfile') {
             steps {
-                echo 'was Devops die Welt bringt'
-                sh '''
-                sleep 3
+                writeFile file: "${APP_WORKDIR}/Dockerfile", text: '''
+                FROM ubuntu:latest
+                WORKDIR /app
+                RUN apt-get update && apt-get install -y python3 python3-pip
+                COPY . /app
+                ENTRYPOINT ["python3"]
+                CMD ["manage.py", "runserver", "0.0.0.0:8000"]
                 '''
             }
-
         }
 
-        stage('build') {
+        stage('Build Docker Image') {
             steps {
-                echo 'was Devops die Welt bringt'
-                sh '''
-               sleep 5
-                '''
+                script {
+                    dockerImage = docker.build("${env.DOCKER_IMAGE}")
+                }
             }
-
         }
 
-        stage('scan') {
+        stage('Push Docker Image') {
             steps {
-                echo 'was Devops die Welt bringt'
-                sh '''
-                cat /etc/os-release
-
-                sleep 3
-                
-                '''
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', "${DOCKERHUB_CREDENTIALS}") {
+                        dockerImage.push("${env.BUILD_NUMBER}")
+                        dockerImage.push('latest')
+                    }
+                }
             }
-
         }
 
-        stage('test') {
+        stage('Deploy Application Using Kubernetes') {
             steps {
-                echo 'was Devops die Welt bringt'
-                sh '''
-                pwd
-                uname -a
-                 sleep 5
+                writeFile file: 'kubernetes-deployment.yaml', text: '''
+                apiVersion: apps/v1
+                kind: Deployment
+                metadata:
+                  name: python-web-app
+                spec:
+                  replicas: 3
+                  selector:
+                    matchLabels:
+                      app: python-web-app
+                  template:
+                    metadata:
+                      labels:
+                        app: python-web-app
+                    spec:
+                      containers:
+                      - name: python-web-app
+                        image: ${env.DOCKER_IMAGE}:latest
+                        ports:
+                        - containerPort: 8000
+                ---
+                apiVersion: v1
+                kind: Service
+                metadata:
+                  name: python-web-app-service
+                spec:
+                  type: LoadBalancer
+                  ports:
+                  - port: 8000
+                    targetPort: 8000
+                  selector:
+                    app: python-web-app
                 '''
+                withCredentials([file(credentialsId: "${KUBE_CONFIG}", variable: 'KUBECONFIG')]) {
+                    sh 'kubectl apply -f kubernetes-deployment.yaml --kubeconfig=$KUBECONFIG'
+                }
             }
-
         }
 
-        stage('sicherheit') {
+        stage('Implement GitOps') {
             steps {
-                echo 'was Devops die Welt bringt'
-                sh '''
-                ls -la
-		uname
-               sleep 2
-                '''
+                // Add GitOps setup and configuration steps here using Argo CD or Flux
             }
-
         }
 
-        stage('deployment') {
+        stage('Monitor and Display Cluster Activities') {
             steps {
-                echo 'was Devops die Welt bringt'
-                sh '''
-		pwd
-               sleep 3
-                '''
+                // Add monitoring setup steps here using Prometheus and Grafana
             }
+        }
+    }
 
+    post {
+        always {
+            echo 'Pipeline finished.'
+        }
+        success {
+            echo 'Pipeline succeeded!'
+        }
+        failure {
+            echo 'Pipeline failed!'
         }
     }
 }
+
