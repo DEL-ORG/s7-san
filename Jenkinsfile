@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials-id') // Replace with your DockerHub credentials ID
-        GITHUB_REPO = 'https://github.com/yourusername/your-repo.git' // Replace with your GitHub repo
+        GITHUB_REPO = 'git@github.com:yourusername/your-repo.git' // Replace with your GitHub repo
         APP_WORKDIR = '/app'
         DOCKER_IMAGE = 'yourusername/python-web-app' // Replace with your DockerHub repository name
         KUBE_CONFIG = credentials('kubeconfig-credentials-id') // Replace with your Kubernetes config credentials ID
@@ -57,5 +57,70 @@ pipeline {
             }
         }
 
-        sta
+        stage('Deploy Application Using Kubernetes') {
+            steps {
+                writeFile file: 'kubernetes-deployment.yaml', text: '''
+                apiVersion: apps/v1
+                kind: Deployment
+                metadata:
+                  name: python-web-app
+                spec:
+                  replicas: 3
+                  selector:
+                    matchLabels:
+                      app: python-web-app
+                  template:
+                    metadata:
+                      labels:
+                        app: python-web-app
+                    spec:
+                      containers:
+                      - name: python-web-app
+                        image: ${env.DOCKER_IMAGE}:latest
+                        ports:
+                        - containerPort: 8000
+                ---
+                apiVersion: v1
+                kind: Service
+                metadata:
+                  name: python-web-app-service
+                spec:
+                  type: LoadBalancer
+                  ports:
+                  - port: 8000
+                    targetPort: 8000
+                  selector:
+                    app: python-web-app
+                '''
+                withCredentials([file(credentialsId: "${KUBE_CONFIG}", variable: 'KUBECONFIG')]) {
+                    sh 'kubectl apply -f kubernetes-deployment.yaml --kubeconfig=$KUBECONFIG'
+                }
+            }
+        }
+
+        stage('Implement GitOps') {
+            steps {
+                // Add GitOps setup and configuration steps here using Argo CD or Flux
+            }
+        }
+
+        stage('Monitor and Display Cluster Activities') {
+            steps {
+                // Add monitoring setup steps here using Prometheus and Grafana
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline finished.'
+        }
+        success {
+            echo 'Pipeline succeeded!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}
 
