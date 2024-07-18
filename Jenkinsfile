@@ -98,11 +98,11 @@ pipeline {
             }
         }
 
-        stage('Implement GitOps') {
+        /* stage('Implement GitOps') {
             steps {
                 // Add GitOps setup and configuration steps here using Argo CD or Flux
             }
-        }
+        } */
 
         stage('Monitor and Display Cluster Activities') {
             steps {
