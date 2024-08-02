@@ -65,7 +65,7 @@ pipeline {
                 metadata:
                   name: python-web-app
                 spec:
-                  replicas: 3
+                  replicas: 4
                   selector:
                     matchLabels:
                       app: python-web-app
